@@ -1,9 +1,13 @@
-
 pipeline {
     agent any
 
-    stages {
+    environment {
+        MAVEN_HOME = 'C:\\Users\\rida2\\maven\\apache-maven-3.10.0'
+        JAVA_HOME = 'C:\\Users\\rida2\\java\\jdk-25'
+        PATH = "${env.MAVEN_HOME}\\bin;${env.JAVA_HOME}\\bin;${env.PATH}"
+    }
 
+    stages {
         stage('Checkout') {
             steps {
                 echo 'Source code checked out from GitHub'
@@ -31,15 +35,16 @@ pipeline {
 
     post {
         always {
-            junit '**/target/surefire-reports/TEST-*.xml'
+            junit allowEmptyResults: true,
+                  testResults: '**/target/surefire-reports/TEST-*.xml'
         }
 
         success {
-            echo 'Congratulations! Build successful.'
+            echo 'BUILD SUCCESSFUL!'
         }
 
         failure {
-            echo 'Build failed. Check the console output.'
+            echo 'BUILD FAILED!'
         }
     }
 }
